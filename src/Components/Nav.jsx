@@ -64,7 +64,7 @@ Nav.propTypes = {
   title: PropTypes.string.isRequired,
   about: PropTypes.string.isRequired,
   toggleMode: PropTypes.func,
-  mode: PropTypes.func,
+  mode: PropTypes.string.isRequired,
 };
 
 
