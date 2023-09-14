@@ -17,20 +17,41 @@ const Textform = (props) => {
          props.showAlert("Converted to Uppercase", "success");
     }
      const handleLoClick = () => {
-       let newText = text.toLocaleLowerCase();
+       let newText = text.toLowerCase();
        setText(newText);
        props.showAlert("Converted to Lowercase", "success");
      };
+    const handleCapitalize = () => {
+      let textArray = text.split(" "); // Split the text into words using space as the delimiter
+      for (var i = 0; i < textArray.length; i++) {
+        const word = textArray[i];
+        textArray[i] =
+          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      let newText = textArray.join(" ");
+      setText(newText);
+      props.showAlert("Converted to Capitalize", "success");
+    };
+
+
       const handleClearClick = () => {
         let newText = ""
         setText(newText);
-        props.showAlert("Text Has been cleared", "success");
+        props.showAlert("Text Has been cleared", "danger");
       };
-       const handleExtraSpaces = () => {
-         let newText = text.split(/[ ] +/);
-         setText(newText.join(" "));
-         props.showAlert("Extra Spaces have been Removed", "success");
-       };
+      const handleExtraSpaces = () => {
+        let newText = text.replace(/\s+/g, " "); 
+        setText(newText);
+        props.showAlert("Extra Spaces have been Removed", "success");
+      };
+       const handleCopy = () => {
+        let text = document.getElementById("mybox")
+        text.select()
+        navigator.clipboard.writeText(text.value);
+         props.showAlert("Text Has been Copied to clipboard", "success");
+
+       }
+
     const [text, setText] = useState("");
   return (
     <>
@@ -46,7 +67,7 @@ const Textform = (props) => {
             }}
             onChange={handleOnChange}
             name=""
-            id=""
+            id="mybox"
             rows="7"></textarea>
         </div>
         <button
@@ -58,20 +79,30 @@ const Textform = (props) => {
         <button
           type="button"
           onClick={handleLoClick}
-          className="btn btn-primary m-2">
+          className="btn btn-secondary m-2">
           Convert To lowercase
+        </button>
+
+        <button
+          type="button"
+          onClick={handleExtraSpaces}
+          className="btn btn-warning m-2">
+          Remove Extra Spaces
+        </button>
+        <button
+          type="button"
+          onClick={handleCapitalize}
+          className="btn btn-primary m-2">
+          Capitalize
         </button>
         <button
           type="button"
           onClick={handleClearClick}
-          className="btn btn-primary m-2">
+          className="btn btn-danger m-2">
           Clear Text
         </button>
-        <button
-          type="button"
-          onClick={handleExtraSpaces}
-          className="btn btn-primary m-2">
-          Remove Extra Spaces
+        <button type="button" onClick={handleCopy} className="btn btn-info m-2">
+          Copy Text
         </button>
       </div>
       <div className="container  my-2">
@@ -93,14 +124,16 @@ const Textform = (props) => {
           </p>
         </div>
         <h3
-          className={`lead py-2 text-${props.mode === "light" ? "grey" : "light"}`}>
+          className={`lead py-2 text-${
+            props.mode === "light" ? "grey" : "light"
+          }`}>
           Text Preview
         </h3>
         <p
           className={`card-body text-${
             props.mode === "light" ? "grey" : "light"
           }`}>
-          {text}
+          {text.length > 0 ? text : "Enter text to preview"}
         </p>
       </div>
     </>
